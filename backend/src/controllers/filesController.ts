@@ -2,7 +2,7 @@ import { checkForDuplicateFile, uploadService } from '../services/fileService';
 import { Request, Response } from 'express';
 
 
-export const uploadFile = (req: Request, res: Response) => {
+export function uploadFile(req: Request, res: Response) {
     const { file } = req;
 
     if (!file) {

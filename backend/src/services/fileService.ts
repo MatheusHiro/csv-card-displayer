@@ -29,25 +29,39 @@ export function checkForDuplicateFile(filePath: string, callback: (err: Error | 
     });
 };
 
-
 export function uploadService(filePath: string) {
     return new Promise<void>((resolve, reject) => {
         const newCsvData: any[] = [];
-        fs.createReadStream(filePath)
-            .pipe(csv())
-            .on('data', (row) => {
-                newCsvData.push(row);
-            })
-            .on('end', () => {
+
+        const fileStream = fs.createReadStream(filePath);
+
+        const parser = fileStream.pipe(csv({ separator: ',' }));
+
+        parser.once('headers', (headers: string[]) => {
+            if (headers.length == 1 && headers[0].includes(';')) {
+                reject(new Error('Invalid CSV format: Incorrect delimiter used.'));
+            }
+        });
+
+        parser.on('data', (row: any) => {
+            newCsvData.push(row);
+        });
+
+        parser.on('end', () => {
+            if (newCsvData.length === 0) {
+                reject(new Error('Empty CSV file: No data found.'));
+            } else {
                 csvData = newCsvData;
                 resolve();
-            })
-            .on('error', (error) => {
-                reject(error);
-            });
-    })
+            }
+        });
+
+        fileStream.on('error', (error) => {
+            reject(error);
+        });
+    });
 };
 
-export const getCsvData = () => {
+export function getCsvData() {
     return csvData;
 };
