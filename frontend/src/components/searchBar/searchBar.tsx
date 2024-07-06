@@ -10,13 +10,13 @@ export default function SearchBar({ onSearch, fields }: ISearchBar) {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchField, setSearchField] = useState('');
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
         const searchTerm = event.target.value;
         setSearchTerm(searchTerm);
         onSearch(searchTerm, searchField);
     };
 
-    const handleFieldChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    function handleFieldChange(event: React.ChangeEvent<HTMLSelectElement>) {
         const searchField = event.target.value;
         setSearchField(searchField);
         onSearch(searchTerm, searchField);

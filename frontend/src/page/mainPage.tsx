@@ -11,7 +11,7 @@ export default function MainPage() {
     const [fields, setFields] = useState<string[]>([]);
 
 
-    const fetchData = () => {
+    function fetchData() {
         axios.get('http://localhost:3000/api/users')
             .then(response => {
                 const data = response.data.data || [];
@@ -29,11 +29,12 @@ export default function MainPage() {
             });
     };
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
         const file = event.target.files && event.target.files[0];
         if (!file) return;
 
         if (file.type !== 'text/csv') {
+            alert('Invalid file type. Please upload a CSV file.')
             console.error('Invalid file type. Please upload a CSV file.');
             resetFileInput();
             return;
@@ -55,13 +56,13 @@ export default function MainPage() {
             });
     };
 
-    const resetFileInput = () => {
+    function resetFileInput() {
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
     };
 
-    const handleSearch = (searchTerm: string, searchField: string) => {
+    function handleSearch(searchTerm: string, searchField: string) {
         if (!searchTerm) {
             setCards(allData);
             return;
